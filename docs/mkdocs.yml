@@ -1,1 +1,144 @@
+site_name: InstitutionKit Documentation
+site_description: Complete Multi-Campus School Management ERP for WordPress
+site_author: Kashif Mukhtar
+site_url: https://institutionkit.com/docs
+copyright: Copyright &copy; 2008-2026 Kashif Mukhtar
 
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+    - toc.integrate
+  icon:
+    repo: fontawesome/brands/github
+  logo: assets/ik-logo.svg
+  favicon: assets/favicon.png
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 4
+
+plugins:
+  - search
+  - with-pdf:
+      cover_title: InstitutionKit Documentation
+      cover_subtitle: Complete Multi-Campus School Management ERP
+      cover_logo: assets/ik-logo.png
+      output_path: institutionkit-manual.pdf
+      enabled_if_env: ENABLE_PDF_EXPORT
+  - minify:
+      minify_html: true
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/wordpress
+      link: https://institutionkit.com
+      name: InstitutionKit Website
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/installation.md
+      - getting-started/quick-setup.md
+      - getting-started/license-activation.md
+      - getting-started/multi-campus-configuration.md
+  - Core Concepts:
+      - core-concepts/roles-and-capabilities.md
+      - core-concepts/campus-management.md
+      - core-concepts/database-schema.md
+      - core-concepts/security-model.md
+      - core-concepts/custom-post-types.md
+  - User Guides:
+      - Dashboard: user-guides/dashboard.md
+      - Student Management:
+          - user-guides/students/overview.md
+          - user-guides/students/admission.md
+          - user-guides/students/attendance.md
+          - user-guides/students/promotion.md
+          - user-guides/students/certificates.md
+      - Teacher & Staff Management:
+          - user-guides/teachers/overview.md
+          - user-guides/teachers/staff-management.md
+          - user-guides/teachers/attendance.md
+          - user-guides/teachers/meetings.md
+          - user-guides/teachers/comments.md
+      - Fee Management:
+          - user-guides/fees/overview.md
+          - user-guides/fees/fee-types.md
+          - user-guides/fees/fee-structures.md
+          - user-guides/fees/invoices.md
+      - Exams:
+          - user-guides/exams/overview.md
+          - user-guides/exams/exam-types.md
+          - user-guides/exams/schedule.md
+          - user-guides/exams/result-entry.md
+          - user-guides/exams/report-cards.md
+          - user-guides/exams/analytics.md
+      - Payroll & Expenses:
+          - user-guides/payroll/overview.md
+          - user-guides/payroll/dashboard.md
+          - user-guides/payroll/staff.md
+          - user-guides/payroll/payroll.md
+          - user-guides/payroll/expenses.md
+          - user-guides/payroll/budgets.md
+          - user-guides/payroll/payslips.md
+      - Gradebook:
+          - user-guides/gradebook/overview.md
+          - user-guides/gradebook/grading-periods.md
+          - user-guides/gradebook/grade-scales.md
+          - user-guides/gradebook/grade-entry.md
+      - Homework: user-guides/homework.md
+      - Parent Portal: user-guides/parent-portal.md
+  - Frontend Modules:
+      - frontend/overview.md
+      - frontend/admissions.md
+      - frontend/attendance.md
+      - frontend/gradebook.md
+      - frontend/invoices.md
+  - Developer Reference:
+      - developer/hooks-filters.md
+      - developer/ajax-endpoints.md
+      - developer/database-tables.md
+      - developer/capabilities-reference.md
+      - developer/shortcodes.md
+      - developer/extending.md
+  - Troubleshooting: troubleshooting/common-issues.md
+  - Changelog: changelog.md
