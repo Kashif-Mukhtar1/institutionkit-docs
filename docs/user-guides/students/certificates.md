@@ -1,5 +1,3 @@
-File name: `docs/user-guides/students/certificates.md`
-
 ```markdown
 # Certificates
 
