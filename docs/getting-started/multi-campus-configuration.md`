@@ -1,1 +1,110 @@
+# Multi-Campus Architecture
 
+InstitutionKit is engineered from the ground up as a **multi-tenant ERP** — not a single-school system with multiple locations bolted on. A single WordPress installation powers unlimited campuses, each with complete data isolation, independent financial tracking, and role-based access control enforced at the database query layer.
+
+---
+
+## Core Philosophy
+
+Most "multi-campus" school systems simply add a dropdown filter. InstitutionKit implements **true multi-tenancy**:
+
+| Principle | Implementation |
+|-----------|---------------|
+| **Data Isolation** | Every table includes `campus_id` as a partition key. Queries are filtered before execution, not after. |
+| **Role-Bound Visibility** | Campus Admins cannot query data outside their campus. This is SQL-level enforcement, not UI-hiding. |
+| **Independent Configuration** | Fee structures, expense heads, grading scales, and operating hours can differ per campus. |
+| **Aggregated Intelligence** | Super Admins toggle between single-campus views and cross-campus analytics. Zero-config aggregation. |
+| **Audit Trail** | Every campus transfer is logged with timestamps, actor IDs, and reasons — permanent, immutable history. |
+
+---
+
+## Two-Tier Administration Model
+
+InstitutionKit implements a binary privilege model — there is no "partial multi-campus" access. A user is either **sovereign** (all campuses) or **bound** (single campus).
+
+=== "Super Admin"
+
+    | Property | Value |
+    |----------|-------|
+    | WordPress Role | `administrator` |
+    | Campus Scope | All campuses + "All Campuses" aggregate |
+    | Switching | Admin bar, dashboard dropdown, URL parameter |
+    | Capabilities | All 62 custom capabilities |
+    | Data Access | Unfiltered — sees everything |
+
+    !!! success "Power User Feature"
+        When viewing "All Campuses" (`campus_id=0`), the system returns aggregated financial summaries, combined attendance statistics, and cross-campus comparison tables. This is not a sum of individual queries — it's a single optimized aggregation pass.
+
+=== "Campus Admin"
+
+    | Property | Value |
+    |----------|-------|
+    | WordPress Role | `campus_admin` only (must NOT also be `administrator`) |
+    | Campus Scope | Single assigned campus — locked |
+    | Switching | No switcher visible. Cannot override via URL. |
+    | Capabilities | 48 campus-scoped capabilities |
+    | Data Access | SQL-filtered to `campus_id = [their_campus]` |
+
+    !!! danger "Critical Security Rule"
+        If a user holds **both** `administrator` and `campus_admin` roles, the `administrator` role takes precedence and the user becomes a Super Admin with unrestricted access. The system checks: `in_array('campus_admin', $roles) && !in_array('administrator', $roles)`.
+
+---
+
+## Campus Lifecycle
+
+### Creating a Campus
+
+**Step-by-step:**
+
+1. Navigate to **InstitutionKit → Campuses**
+2. Click **+ Add New Campus**
+3. Complete the campus profile:
+
+| Field | Constraint | Purpose |
+|-------|-----------|---------|
+| **Campus Name** | Required, unique recommended | Display name across all screens, reports, and parent portal |
+| **Campus Code** | Required, **must be unique** | Internal identifier. Used in exports, API calls, and cross-campus queries. Choose short, descriptive codes: `MAIN`, `DT`, `NW`, `EAST` |
+| **Address** | Optional, recommended | Appears on the dashboard info bar, invoices, and certificates |
+| **Phone** | Optional, recommended | Displayed on dashboard and parent communications |
+| **Email** | Optional, recommended | Campus-specific contact for parent inquiries |
+| **Principal Name** | Optional, recommended | Displayed on the dashboard info bar and certificate headers |
+
+4. Click **Add Campus**
+
+**What happens automatically:**
+
+- A row is inserted into `institutionkit_campuses`
+- The campus appears in all system-wide dropdowns
+- The admin bar switcher updates for all Super Admins
+- Default expense heads are available (global heads with `campus_id = NULL`)
+- The campus is ready for student/staff assignment
+
+### Campus Status Management
+
+Campuses can be **activated** or **deactivated** without data loss:
+
+| Status | Effect |
+|--------|--------|
+| **Active** | Fully operational. Appears in all dropdowns and reports. |
+| **Inactive** | Hidden from dropdowns. Historical data preserved. Users assigned to this campus see no data. |
+
+!!! tip "Soft Delete Pattern"
+    Deactivating a campus is preferable to deletion. All financial records, student histories, and attendance logs remain intact for auditing and regulatory compliance.
+
+---
+
+## User-to-Campus Assignment
+
+### Architecture
+
+The relationship is stored in `institutionkit_campus_users`:
+
+```sql
+CREATE TABLE wp_institutionkit_campus_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT(20) NOT NULL,
+    campus_id INT NOT NULL,
+    role VARCHAR(50) DEFAULT 'campus_admin',
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY user_campus (user_id, campus_id)
+);
