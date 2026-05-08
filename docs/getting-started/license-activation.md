@@ -85,5 +85,25 @@ $status = $wpdb->get_var(
 );
 
 if (trim($status) === 'active') {
+
+Renewing Your License
+Log in to your account at institutionkit.com
+
+Go to My Licenses
+
+Click Renew next to your license
+
+Complete payment
+
+Your license updates automatically — no need to re-enter the key
+
+Need Help?
+:material-email: support@institutionkit.com
+
+:material-phone: +92 300 455 1325
+
+:material-web: institutionkit.com/support
+
+
     echo "License is active";
 }
