@@ -1,4 +1,3 @@
-```markdown
 # Database Schema Reference
 
 InstitutionKit creates **40+ custom tables** to manage every aspect of school operations. This reference documents every table, its columns, data types, and relationships.
