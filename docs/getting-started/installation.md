@@ -6,7 +6,7 @@
 | Requirement | Minimum | Recommended |
 |-------------|---------|-------------|
 | **WordPress** | 5.8+ | 6.4+ |
-| **PHP** | 7.4 | 8.1+ |
+| **PHP** | 7.4 | 8.3+ |
 | **MySQL** | 5.7 | 8.0+ (or MariaDB 10.4+) |
 | **PHP Memory Limit** | 128MB | 256MB+ |
 | **PHP Max Execution Time** | 60s | 300s |
